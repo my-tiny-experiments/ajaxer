@@ -83,13 +83,13 @@
 
 		// when request is done.
 		request.onreadystatechange = function () {
-            if (this.readyState == 4 && request.status == 200) {
-                if (options.afterCallback) {
-                    options.afterCallback(this.responseText);
-                }
+			if (this.readyState == 4 && request.status == 200) {
+				if (options.afterCallback) {
+					options.afterCallback(this.responseText);
+				}
 
-            }
-        }
+			}
+		}
 
 		// send the request.
 		if (urlData) {
@@ -241,7 +241,4 @@
 			}
 		}
 	}();
-
-	
-
 }());
