@@ -152,7 +152,14 @@
 		form.onsubmit = function() {
 			call(form);
 			return false ;
-		}
+		};
+	}
+
+	var preventAnchor = function (anchor) {
+		anchor.addEventListener('click', function (event) {
+			event.preventDefault();
+			call(anchor);
+		}, false);
 	}
 
 	/**
@@ -165,6 +172,13 @@
 		for(var i = 0 ; i < forms.length ; i++) {
 			if (forms[i].hasAttribute(axerAttrib)) {
 				preventSubmit(forms[i]);
+			}
+		}
+
+		var anchors = document.getElementsByTagName('a');
+		for (var i = 0; i < anchors.length; i++) {
+			if (anchors[i].hasAttribute(axerAttrib)) {
+				preventAnchor(anchors[i]);
 			}
 		}
 	}();
