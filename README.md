@@ -10,12 +10,12 @@ axer attributes
 
 # Usage
 - Add axer to the form or anchor eg: `<form axer ...>`.
-- axer attributes are :__
-`axer-action` specify where to send the form data.__
-`axer-action-result` specify where to put the response (it should take an id).__
-`axer-loading` specify what is the id of the loading form.__
-`axer-method` the method of your form.__
-`axer-redirect` where to redirect the form or anchor after finish proccessing.__
-`axer-before` the function name to call before start proccessing.__
-`axer-after` function name to call after finishing proccessing.__
+- axer attributes are :<br />
+`axer-action` specify where to send the form data.<br />
+`axer-action-result` specify where to put the response (it should take an id).<br />
+`axer-loading` specify what is the id of the loading form.<br />
+`axer-method` the method of your form.<br />
+`axer-redirect` where to redirect the form or anchor after finish proccessing.<br />
+`axer-before` the function name to call before start proccessing.<br />
+`axer-after` function name to call after finishing proccessing.<br />
 
