@@ -38,6 +38,11 @@
 		after: function (element) {
 			return element.getAttribute(axerAttrib + '-after') || null;
 		},
+
+		// return method
+		method: function (element) {
+			return element.getAttribute(axerAttrib + '-method') || null;
+		},
 	};
 
 	/**
@@ -67,7 +72,7 @@
 
 		// form data.
 		if (options.data) {
-			var keys = object.keys(options.data);
+			var keys = Object.keys(options.data);
 			for (var i = 0; i < keys.length; i++) {
                 urlData += keys[i] + '=' + options.data[keys[i]];
                 if (i < keys.length - 1) {
@@ -104,14 +109,23 @@
 	 * @return {void}      [description]
 	 */
 	var call = function (el) {
+
 		var action = attribs.action(el);
 		var before = attribs.before(el);
 		var after = attribs.after(el);
 		var result = attribs.result(el);
 		var loading = attribs.loading(el);
-		var redirect = attribs.redirect(el)
+		var redirect = attribs.redirect(el);
+		var method = attribs.method(el);
+
 		if (action) {
 			var options = {};
+
+			// send the method if exists.
+			if (method) {
+				method = method.toUpperCase();
+				options.type = method;
+			}
 
 			/**
 			 * set function to call before request is done.
@@ -160,9 +174,17 @@
 				}
 			}
 
+			var formElements = el.elements;
+			var data = {};
+			data['_method'] = method;
 
+			for (var i = 0; i < formElements.length; i++) {
+				if (formElements[i].name.length) {
+					data[formElements[i].name] = formElements[i].value;
+				}
+			}
 
-
+			options.data = data;
 			ajax(action,options);
 		}
 	}
