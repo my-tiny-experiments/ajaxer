@@ -10,32 +10,32 @@
 	 */
 	var attribs = {
 		// return the action attrib
-		action: function(element) {
+		action: function (element) {
 			return element.getAttribute(axerAttrib + '-action') || null;
 		},
 
 		// return the result attrib
-		result: function(element) {
+		result: function (element) {
 			return element.getAttribute(axerAttrib + '-action-result') || null;
 		},
 
 		// return the loading attrib
-		loading: function(element) {
+		loading: function (element) {
 			return element.getAttribute(axerAttrib + '-loading') || null;
 		},
 
 		// return the redirect element
-		redirect: function(element) {
+		redirect: function (element) {
 			return element.getAttribute(axerAttrib + '-redirect') || null;
 		},
 
 		// return the before attrib
-		before: function(element) {
+		before: function (element) {
 			return element.getAttribute(axerAttrib + '-before') || null;
 		},
 
 		// return the after attrib
-		after: function(element) {
+		after: function (element) {
 			return element.getAttribute(axerAttrib + '-after') || null;
 		},
 	};
@@ -47,12 +47,12 @@
 	 * @param  {Object} options [description]
 	 * @return {[type]}         [description]
 	 */
-	var ajax = function(url, options = {}) {
+	var ajax = function (url, options = {}) {
 		var urlData = '';
 		var request = new XMLHttpRequest();
 
 		// if type is given.
-		if(options.type) {
+		if (options.type) {
 			request.open(options.type, url, true);
 		} else {
 			request.open('GET', url, true);
@@ -61,12 +61,12 @@
 		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
 		
 		// if before callback is given
-		if(options.beforeCallback) {
+		if (options.beforeCallback) {
 			options.beforeCallback(request);
 		}
 
 		// form data.
-		if(options.data) {
+		if (options.data) {
 			var keys = object.keys(options.data);
 			for (var i = 0; i < keys.length; i++) {
                 urlData += keys[i] + '=' + options.data[keys[i]];
@@ -76,7 +76,8 @@
             }
 		}
 
-		request.onreadystatechange = function() {
+		// when request is done.
+		request.onreadystatechange = function () {
             if (this.readyState == 4 && request.status == 200) {
                 if (options.afterCallback) {
                     options.afterCallback(this.responseText);
@@ -85,6 +86,7 @@
             }
         }
 
+        // send the request.
         if (urlData) {
             request.send(urlData);
         } else {
@@ -101,37 +103,60 @@
 	 * @param  {object} form [description]
 	 * @return {void}      [description]
 	 */
-	var call = function(form) {
-		var action = attribs.action(form);
-		var after = attribs.after(form);
-		var result = attribs.result(form);
-		var loading = attribs.loading(form);
-		if(action) {
+	var call = function (el) {
+		var action = attribs.action(el);
+		var before = attribs.before(el);
+		var after = attribs.after(el);
+		var result = attribs.result(el);
+		var loading = attribs.loading(el);
+		var redirect = attribs.redirect(el)
+		if (action) {
 			var options = {};
 
+			/**
+			 * set function to call before request is done.
+			 * 
+			 * @return {[type]} [description]
+			 */
 			options.beforeCallback = function() {
-				console.log(loading);
-				if(loading) {
-					document.getElementById(loading).style.display = 'block';
-				} else {
 
+				// if loading provided, display it.
+				if (loading) {
+					document.getElementById(loading).style.display = 'block';
+				}
+
+				// if before provided call it.
+				if (before) {
+					window[before]();
 				}
 			}
 
-			if(attribs.after(form)) {
-				options.afterCallback = function(data) {
+			/**
+			 * set functions to call after request is done.
+			 * 
+			 * @param  {[type]} data [description]
+			 * @return {[type]}      [description]
+			 */
+			options.afterCallback = function (data) {
+				// if axer-after is given.
+				if (after) {
 					window[after](data);
-					if (loading) {
-						document.getElementById(loading).style.display = 'none';
-					}
 				}
-			} else if(result) {
-				options.afterCallback = function(data) {
+
+				// if loading is given.
+				if (loading) {
+					document.getElementById(loading).style.display = 'none';
+				}
+
+				// if result is given.
+				if (result) {
 					var res = document.getElementById(result);
 					res.innerHTML = data;
-					if (loading) {
-						document.getElementById(loading).style.display = 'none';
-					}
+				}
+
+				// if redirect is given.
+				if (redirect) {
+					document.location = redirect;
 				}
 			}
 
@@ -148,13 +173,19 @@
 	 * @param  {[type]} form [description]
 	 * @return {[type]}      [description]
 	 */
-	var preventSubmit = function(form) {
-		form.onsubmit = function() {
+	var preventSubmit = function (form) {
+		form.onsubmit = function (event) {
+			event.preventDefault();
 			call(form);
-			return false ;
 		};
 	}
 
+	/**
+	 * prevent default anchor 
+	 * 
+	 * @param  {element} anchor [description]
+	 * @return {void}        [description]
+	 */
 	var preventAnchor = function (anchor) {
 		anchor.addEventListener('click', function (event) {
 			event.preventDefault();
@@ -167,7 +198,9 @@
 	 * 
 	 * @return {void} [description]
 	 */
-	var axer = function() {
+	var axer = function () {
+
+		// get all forms.
 		var forms = document.getElementsByTagName('form')
 		for(var i = 0 ; i < forms.length ; i++) {
 			if (forms[i].hasAttribute(axerAttrib)) {
@@ -175,6 +208,7 @@
 			}
 		}
 
+		// get all anchors.
 		var anchors = document.getElementsByTagName('a');
 		for (var i = 0; i < anchors.length; i++) {
 			if (anchors[i].hasAttribute(axerAttrib)) {
