@@ -2,14 +2,23 @@
 <html>
 <head>
 	<title>test</title>
+	<script>
+		var beforeTest = function () {
+			console.log('Hi before response')
+		};
+
+		var afterTest = function () {
+			console.log('Hi after response');
+		}
+	</script>
 </head>
 <body>
-	<form method="POST" axer axer-action='test.php' axer-action-result='result' axer-loading='loading'>
+	<form method="POST" axer axer-action='test.php' axer-before='beforeTest' axer-after='afterTest' axer-action-result='result' axer-loading='loading'>
 		<input type="text" name="number">
 		<input type="submit" value="go">
 	</form>
 
-	<a href="" axer axer-action='test.php' axer-action-result='result' axer-loading='loading'> aa </a>
+	<a href="" axer axer-action='test.php' axer-redirect='test.php' axer-loading='loading'> aa </a>
 
 	<div id="result"></div>
 
