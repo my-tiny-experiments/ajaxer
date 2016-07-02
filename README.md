@@ -1,5 +1,5 @@
 # Ajaxer as axer;
-simplify ajax request fro forms and anchors, just by adding
+simplify ajax request in forms and anchors, just by adding
 axer attributes
 
 
