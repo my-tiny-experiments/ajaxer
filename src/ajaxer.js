@@ -74,11 +74,11 @@
 		if (options.data) {
 			var keys = Object.keys(options.data);
 			for (var i = 0; i < keys.length; i++) {
-                urlData += keys[i] + '=' + options.data[keys[i]];
-                if (i < keys.length - 1) {
-                    urlData += '&';
-                }
-            }
+				urlData += keys[i] + '=' + options.data[keys[i]];
+				if (i < keys.length - 1) {
+					urlData += '&';
+				}
+			}
 		}
 
 		// when request is done.
