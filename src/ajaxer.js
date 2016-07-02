@@ -175,16 +175,19 @@
 			}
 
 			var formElements = el.elements;
-			var data = {};
-			data['_method'] = method;
+			if (formElements) {
+				var data = {};
+				data['_method'] = method;
 
-			for (var i = 0; i < formElements.length; i++) {
-				if (formElements[i].name.length) {
-					data[formElements[i].name] = formElements[i].value;
+				for (var i = 0; i < formElements.length; i++) {
+					if (formElements[i].name.length) {
+						data[formElements[i].name] = formElements[i].value;
+					}
 				}
-			}
 
-			options.data = data;
+				options.data = data;
+			}
+			
 			ajax(action,options);
 		}
 	}
