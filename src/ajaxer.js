@@ -198,24 +198,19 @@
 	 * @param  {[type]} form [description]
 	 * @return {[type]}      [description]
 	 */
-	var preventSubmit = function (form) {
-		form.onsubmit = function (event) {
-			event.preventDefault();
-			call(form);
-		};
-	}
+	var preventDef = function (el) {
 
-	/**
-	 * prevent default anchor 
-	 * 
-	 * @param  {element} anchor [description]
-	 * @return {void}        [description]
-	 */
-	var preventAnchor = function (anchor) {
-		anchor.addEventListener('click', function (event) {
-			event.preventDefault();
-			call(anchor);
-		}, false);
+		if (el.nodeName == 'FORM') {
+			el.onsubmit = function (event) {
+				event.preventDefault();
+				call(el);
+			};
+		} else {
+			el.addEventListener('click', function (event) {
+				event.preventDefault();
+				call(el);
+			});
+		}
 	}
 
 	/**
@@ -225,20 +220,20 @@
 	 */
 	var axer = function () {
 
-		// get all forms.
-		var forms = document.getElementsByTagName('form')
-		for(var i = 0 ; i < forms.length ; i++) {
-			if (forms[i].hasAttribute(axerAttrib)) {
-				preventSubmit(forms[i]);
+		// get all elements.
+		var elements = document.getElementsByTagName('*')
+		for(var i = 0 ; i < elements.length ; i++) {
+			if (elements[i].hasAttribute(axerAttrib)) {
+				preventDef(elements[i]);
 			}
 		}
 
-		// get all anchors.
-		var anchors = document.getElementsByTagName('a');
-		for (var i = 0; i < anchors.length; i++) {
-			if (anchors[i].hasAttribute(axerAttrib)) {
-				preventAnchor(anchors[i]);
-			}
-		}
+		// // get all anchors.
+		// var anchors = document.getElementsByTagName('a');
+		// for (var i = 0; i < anchors.length; i++) {
+		// 	if (anchors[i].hasAttribute(axerAttrib)) {
+		// 		preventAnchor(anchors[i]);
+		// 	}
+		// }
 	}();
 }());
