@@ -227,13 +227,5 @@
 				preventDef(elements[i]);
 			}
 		}
-
-		// // get all anchors.
-		// var anchors = document.getElementsByTagName('a');
-		// for (var i = 0; i < anchors.length; i++) {
-		// 	if (anchors[i].hasAttribute(axerAttrib)) {
-		// 		preventAnchor(anchors[i]);
-		// 	}
-		// }
 	}();
 }());
