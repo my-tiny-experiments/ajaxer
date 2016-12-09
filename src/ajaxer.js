@@ -52,7 +52,7 @@
 	 * @param  {Object} options [description]
 	 * @return {[type]}         [description]
 	 */
-	var ajax = function (url, options = {}) {
+	var ajax = function (url, options) {
 		var urlData = '';
 		var request = new XMLHttpRequest();
 
@@ -64,10 +64,11 @@
 		}
 		// set default header.
 		request.setRequestHeader('Content-Type', 'application/x-www-form-urlencoded');
-		
+
+		var proceed = true;
 		// if before callback is given
 		if (options.beforeCallback) {
-			options.beforeCallback(request);
+			proceed = (options.beforeCallback(request));
 		}
 
 		// form data.
@@ -83,21 +84,22 @@
 
 		// when request is done.
 		request.onreadystatechange = function () {
-			if (this.readyState == 4 && request.status == 200) {
+			if (this.readyState == 4) {
 				if (options.afterCallback) {
-					options.afterCallback(this.responseText);
+					options.afterCallback(request.responseText, request.status);
 				}
 
 			}
-		}
+		};
 
 		// send the request.
-		if (urlData) {
-			request.send(urlData);
-		} else {
-			request.send();
-		}
-	}
+		if(proceed !== false)
+			if (urlData) {
+				request.send(urlData);
+			} else {
+				request.send();
+			}
+	};
 
 	
 
@@ -117,6 +119,8 @@
 		var loading = attribs.loading(el);
 		var redirect = attribs.redirect(el);
 		var method = attribs.method(el);
+
+		var proceed = true;
 
 		if (action) {
 			var options = {};
@@ -141,9 +145,10 @@
 
 				// if before provided call it.
 				if (before) {
-					window[before]();
+					proceed = window[before]();
+					return proceed;
 				}
-			}
+			};
 
 			/**
 			 * set functions to call after request is done.
@@ -151,10 +156,10 @@
 			 * @param  {[type]} data [description]
 			 * @return {[type]}      [description]
 			 */
-			options.afterCallback = function (data) {
+			options.afterCallback = function (data, response) {
 				// if axer-after is given.
 				if (after) {
-					window[after](data);
+					window[after](data, response);
 				}
 
 				// if loading is given.
@@ -187,7 +192,7 @@
 
 				options.data = data;
 			}
-			
+
 			ajax(action,options);
 		}
 	}
